@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from 'react-native'
 import { useSelector } from 'react-redux'
 import Info from '../Info'
 import { THEME } from '../../UI/theme'
@@ -11,6 +17,8 @@ import {
 } from '../../dateFunctions'
 
 const Card = ({ onOpen, id }) => {
+  const device = Platform.OS
+
   const order = useSelector((state) =>
     state.order.orders.find((ord) => ord.id === id)
   )
@@ -39,8 +47,22 @@ const Card = ({ onOpen, id }) => {
         </View>
         <View>
           <View style={styles.dateInfoBlock}>
-            <Text style={styles.dateInfoText}>Ближайшая доставка</Text>
-            <Text style={styles.dateInfoTextColor}>в {weekDay} -</Text>
+            <Text
+              style={[
+                styles.dateInfoText,
+                { fontSize: device === 'android' ? 15 : 17 },
+              ]}
+            >
+              Ближайшая доставка
+            </Text>
+            <Text
+              style={[
+                styles.dateInfoTextColor,
+                { fontSize: device === 'android' ? 15 : 17 },
+              ]}
+            >
+              в {weekDay} -
+            </Text>
             <View style={styles.dateInfoTimeBlok}>
               <Text
                 style={styles.dateInfoTimeText}
@@ -93,11 +115,9 @@ const styles = StyleSheet.create({
   },
   dateInfoText: {
     fontFamily: 'roboto-bold',
-    fontSize: 17,
   },
   dateInfoTextColor: {
     fontFamily: 'roboto-bold',
-    fontSize: 17,
     color: THEME.colorBlue,
   },
   dateInfoTimeBlok: {

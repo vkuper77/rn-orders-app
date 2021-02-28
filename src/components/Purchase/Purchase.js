@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, Platform } from 'react-native'
 
 import {
   dateHandler,
@@ -13,6 +13,8 @@ const Purchase = ({ data }) => {
   const day = getDayHandler(date)
   const weekDay = getWeekDayHandler(date)
   const month = getMonthHandler(date)
+
+  const device = Platform.OS
 
   return (
     <View
@@ -29,14 +31,17 @@ const Purchase = ({ data }) => {
           style={styles.purchase}
         />
         <Text
-          style={styles.text}
+          style={{
+            fontFamily: 'roboto-regular',
+            fontSize: device === 'android' ? 12 : 14,
+          }}
         >{`${day} ${month.toLowerCase()}, ${weekDay}`}</Text>
       </View>
       <View style={styles.container}>
         <Text style={styles.text}>{data.interval}</Text>
         <Image
           source={require('../../../assets/img/arrow.png')}
-          style={styles.arrow}
+          style={{ marginLeft: device === 'android' ? 15 : 36 }}
         />
       </View>
     </View>
@@ -55,14 +60,11 @@ const styles = StyleSheet.create({
     marginTop: 8.85,
     marginBottom: 20.44,
   },
-  arrow: {
-    marginLeft: 36,
-  },
 
-  text: {
-    fontFamily: 'roboto-regular',
-    fontSize: 14,
-  },
+  // text: {
+  //   fontFamily: 'roboto-regular',
+  //   fontSize: 14,
+  // },
 })
 
 export default Purchase
