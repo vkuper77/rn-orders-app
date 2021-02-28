@@ -16,7 +16,7 @@ export function getDayHandler(date) {
 
 export function getWeekDayHandler(date) {
   let days = [
-    'воскресенье',
+    'воскресенье.',
     'понедельник',
     'вторник',
     'среда',

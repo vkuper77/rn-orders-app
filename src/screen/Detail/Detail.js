@@ -18,12 +18,9 @@ const Detail = ({ navigation, route }) => {
   const dispatch = useDispatch()
 
   const orderId = route.params.orderId
-
   const order = useSelector((state) =>
     state.order.orders.find((ord) => ord.id === orderId)
   )
-
-  const lengthOrders = useSelector((state) => state.order.orders.length)
 
   const handlerRepeatOrder = () => {
     Alert.alert(
@@ -91,14 +88,14 @@ const Detail = ({ navigation, route }) => {
           <Text style={styles.title}>Доставки</Text>
         </View>
         <View style={styles.containerPurchase}>
-          {order.deliveries.map((item, i, arr) => {
+          {order.deliveries.sort().map((item, i, arr) => {
             return i !== arr.length - 1 ? (
               <View key={item.id}>
                 <Purchase data={item} />
                 {line}
               </View>
             ) : (
-              <View key={item}>
+              <View key={item.id}>
                 <Purchase data={item} />
               </View>
             )

@@ -63,10 +63,10 @@ const Progress = ({ step, steps, height }) => {
   )
 }
 
-const Slider = ({ num, step }) => {
+const Slider = ({ step, steps }) => {
   return (
     <View>
-      <Progress step={step} steps={num} height={5.54} />
+      <Progress step={step} steps={steps} height={5.54} />
     </View>
   )
 }

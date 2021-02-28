@@ -16,13 +16,36 @@ const Info = ({ style, data }) => {
   })
   arr.sort()
 
+  const orderProcessing = (num) => {
+    return num > 0
+  }
+
+  const completedOrders = arr.filter((item) => {
+    const day1 = todayHandler(item)
+    const day2 = dateHandler(item)
+    const resultDay = Math.round(daysHandler(day2, day1))
+    return orderProcessing(resultDay) ? null : item
+  })
+
+  const activeOrders = arr.filter((item) => {
+    const day1 = todayHandler(item)
+    const day2 = dateHandler(item)
+    const resultDay = Math.round(daysHandler(day2, day1))
+    return orderProcessing(resultDay) ? item : null
+  })
+
   const today = todayHandler()
-  const nearest = dateHandler(arr[0])
+  const nearest = dateHandler(activeOrders[0])
+  const firstOrder = dateHandler(arr[0])
+
+  const nearestDays = Math.round(daysHandler(nearest, today))
   const last = dateHandler(arr[arr.length - 1])
-  const nearestDays = daysHandler(nearest, today)
-  const lastDays = daysHandler(last, today)
+  const lastDays = Math.round(daysHandler(last, today))
   const dayLast = getDayHandler(last)
   const monthLast = getMonthHandler(last)
+
+  const nearestDate = getDayHandler(firstOrder)
+  const nearestMonth = getMonthHandler(firstOrder)
 
   return (
     <View>
@@ -34,9 +57,11 @@ const Info = ({ style, data }) => {
         </View>
       </View>
       <View style={styles.containerSlider}>
-        <Slider step={arr.length} num={lastDays} />
+        <Slider step={completedOrders.length} steps={arr.length} />
         <View style={styles.containerSliderText}>
-          <Text style={styles.sliderDate}>20 окт</Text>
+          <Text style={styles.sliderDate}>
+            {`${nearestDate} ${nearestMonth}`}
+          </Text>
           <Text style={styles.sliderText}>Осталось {lastDays} дней</Text>
           <Text style={styles.sliderDate}>{`${dayLast} ${monthLast}`}</Text>
         </View>
