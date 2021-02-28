@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "orders",
+    "githubUrl": "https://github.com/vkuper77/rn-orders-app"
   }
 }

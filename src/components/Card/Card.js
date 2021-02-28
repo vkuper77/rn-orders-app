@@ -14,6 +14,9 @@ import {
   dateHandler,
   getMonthHandler,
   getWeekDayHandler,
+  todayHandler,
+  daysHandler,
+  getDayHandler,
 } from '../../dateFunctions'
 
 const Card = ({ onOpen, id }) => {
@@ -28,14 +31,23 @@ const Card = ({ onOpen, id }) => {
   })
   arr.sort()
 
-  const timeAddress = order.deliveries.filter((item) => {
-    return item.date === arr[0]
+  const activeOrders = arr.filter((item) => {
+    const day1 = todayHandler(item)
+    const day2 = dateHandler(item)
+    const resultDay = Math.round(daysHandler(day2, day1))
+    return resultDay > 0 ? item : null
   })
+
+  const timeAddress = order.deliveries.filter((item) => {
+    return item.date === activeOrders[0]
+  })
+
   const time = timeAddress[0].interval.split('-')
 
-  const nearest = dateHandler(arr[0])
+  const nearest = dateHandler(activeOrders[0])
   const month = getMonthHandler(nearest)
   const weekDay = getWeekDayHandler(nearest)
+  const day = getDayHandler(nearest)
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => onOpen()}>
@@ -43,7 +55,7 @@ const Card = ({ onOpen, id }) => {
       <View style={styles.containerInfoDelivery}>
         <View style={styles.dateBlueBlock}>
           <Text style={styles.dateBlueBlockText}>{month}</Text>
-          <Text style={styles.dateBlueBlockNum}>28</Text>
+          <Text style={styles.dateBlueBlockNum}>{day}</Text>
         </View>
         <View>
           <View style={styles.dateInfoBlock}>
