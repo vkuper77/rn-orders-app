@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -20,72 +20,87 @@ import {
 } from '../../dateFunctions'
 
 const Card = ({ onOpen, id }) => {
+  const [actualDate, setActualDate] = useState(false)
+
   const device = Platform.OS
 
   const order = useSelector((state) =>
     state.order.orders.find((ord) => ord.id === id)
   )
-
   const arr = order.deliveries.map((item) => {
     return item.date
   })
+
   arr.sort()
 
-  const activeOrders = arr.filter((item) => {
-    const day1 = todayHandler(item)
-    const day2 = dateHandler(item)
-    const resultDay = Math.round(daysHandler(day2, day1))
-    return resultDay > 0 ? item : null
-  })
+  useEffect(() => {
+    const activeOrders = arr.filter((item) => {
+      const day1 = todayHandler(item)
+      const day2 = dateHandler(item)
+      const resultDay = Math.round(daysHandler(day2, day1))
+      return resultDay > 0 ? item : null
+    })
 
-  const timeAddress = order.deliveries.filter((item) => {
-    return item.date === activeOrders[0]
-  })
-
-  const time = timeAddress[0].interval.split('-')
-
-  const nearest = dateHandler(activeOrders[0])
-  const month = getMonthHandler(nearest)
-  const weekDay = getWeekDayHandler(nearest)
-  const day = getDayHandler(nearest)
+    if (activeOrders.length) {
+      const timeAddress = order.deliveries.filter((item) => {
+        return item.date === activeOrders[0]
+      })
+      const time = timeAddress[0].interval.split('-')
+      const nearest = dateHandler(activeOrders[0])
+      const month = getMonthHandler(nearest)
+      const weekDay = getWeekDayHandler(nearest)
+      const day = getDayHandler(nearest)
+      setActualDate({
+        timeAddress,
+        time,
+        month,
+        weekDay,
+        day,
+      })
+    }
+  }, [order])
 
   return (
     <TouchableOpacity style={styles.container} onPress={() => onOpen()}>
       <Info style={{ pading: 0, margin: 12 }} data={order} />
-      <View style={styles.containerInfoDelivery}>
-        <View style={styles.dateBlueBlock}>
-          <Text style={styles.dateBlueBlockText}>{month}</Text>
-          <Text style={styles.dateBlueBlockNum}>{day}</Text>
-        </View>
-        <View>
-          <View style={styles.dateInfoBlock}>
-            <Text
-              style={[
-                styles.dateInfoText,
-                { fontSize: device === 'android' ? 15 : 17 },
-              ]}
-            >
-              Ближайшая доставка
-            </Text>
-            <Text
-              style={[
-                styles.dateInfoTextColor,
-                { fontSize: device === 'android' ? 15 : 17 },
-              ]}
-            >
-              в {weekDay} -
-            </Text>
-            <View style={styles.dateInfoTimeBlok}>
+      {actualDate ? (
+        <View style={styles.containerInfoDelivery}>
+          <View style={styles.dateBlueBlock}>
+            <Text style={styles.dateBlueBlockText}>{actualDate.month}</Text>
+            <Text style={styles.dateBlueBlockNum}>{actualDate.day}</Text>
+          </View>
+          <View>
+            <View style={styles.dateInfoBlock}>
               <Text
-                style={styles.dateInfoTimeText}
-              >{`с ${time[0]} до ${time[1]}`}</Text>
-              <Text style={styles.dateInfoTimeTextColor}>
-                {timeAddress[0].address}
+                style={[
+                  styles.dateInfoText,
+                  { fontSize: device === 'android' ? 15 : 17 },
+                ]}
+              >
+                Ближайшая доставка
               </Text>
+              <Text
+                style={[
+                  styles.dateInfoTextColor,
+                  { fontSize: device === 'android' ? 15 : 17 },
+                ]}
+              >
+                в {actualDate.weekDay} -
+              </Text>
+              <View style={styles.dateInfoTimeBlok}>
+                <Text
+                  style={styles.dateInfoTimeText}
+                >{`с ${actualDate.time[0]} до ${actualDate.time[1]}`}</Text>
+                <Text style={styles.dateInfoTimeTextColor}>
+                  {actualDate.timeAddress[0].address}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      ) : (
+        <Text>Ваши заказы доставлены</Text>
+      )}
     </TouchableOpacity>
   )
 }

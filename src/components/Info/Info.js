@@ -50,7 +50,9 @@ const Info = ({ style, data }) => {
   return (
     <View>
       <View style={[styles.boxHeaderText, { paddingLeft: style.pading }]}>
-        <Text style={styles.title}>{nearestDays} дней</Text>
+        <Text style={styles.title}>
+          {activeOrders.length ? `${nearestDays} дней` : 'Доставлено'}
+        </Text>
         <View style={[styles.boxTextСalories, { marginRight: style.margin }]}>
           <Text style={styles.headerTextDiet}>{data.packageName}</Text>
           <Text style={styles.headerTextCalories}>{data.packageCalories}</Text>
@@ -62,7 +64,9 @@ const Info = ({ style, data }) => {
           <Text style={styles.sliderDate}>
             {`${nearestDate} ${nearestMonth}`}
           </Text>
-          <Text style={styles.sliderText}>Осталось {lastDays} дней</Text>
+          <Text style={styles.sliderText}>
+            {activeOrders.length ? `Осталось ${lastDays} дней` : null}
+          </Text>
           <Text style={styles.sliderDate}>{`${dayLast} ${monthLast}`}</Text>
         </View>
       </View>
